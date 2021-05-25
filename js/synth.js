@@ -110,10 +110,12 @@ function updateParams() {
   audioParams.filter.cutoff    = filterC.value;
   audioParams.filter.resonance = filterR.value;
 
-  synth.filter.type = filterType.value;
-  synth.filter.frequency.value = filterC.value;
+  if (synth.audioCtx) {
+    synth.filter.type = filterType.value;
+    synth.filter.frequency.value = filterC.value;
+    synth.filter.Q.value = filterR.value;
+  }
   filterC.nextElementSibling.innerText = filterC.value + " Hz";
-  synth.filter.Q.value = filterR.value;
   filterR.nextElementSibling.innerText = filterR.value;
 }
 
