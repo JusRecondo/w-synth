@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAA2</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main>
+        <section id="master">
+        <h1>Web Audio API Synth 2.0</h1>
+            <article>
+                <button id="create-audioctx-btn">
+                    Create audio context
+                </button>
+                <label>
+                    Master 
+                    <input id="master-gain-fader" class="gain-fader" type="range" min=0 max=1 step=0.01 value=0 >
+                    <span>0.00</span>
+                </label>
+            </article>
+        </section>    
+
+        <section id="oscillators">
+            <article id="osc1">
+                <h2>OSC I</h2>
+                <label>Wave: 
+                    <select class="osc-wave">
+                        <option value="sine">sine</option>
+                        <option value="triangle">triangle</option>
+                        <option value="square">square</option>
+                        <option value="sawtooth">sawtooth</option>
+                    </select>  
+                </label>
+                <label>
+                    Volumen
+                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <span>0.00</span>
+                </label>
+                <label>
+                    Frecuencia
+                    <input class="freq-fader" type="range" min="60" max="1000" step="0.1" value="200" disabled>
+                    <span>200 Hz</span>
+                </label>
+            </article>
+
+            <article id="osc2">
+                <h2>OSC II</h2>
+                <label>Wave:
+                    <select class="osc-wave">
+                        <option value="sine">sine</option>
+                        <option value="triangle">triangle</option>
+                        <option value="square">square</option>
+                        <option value="sawtooth">sawtooth</option>
+                    </select>  
+                </label>
+                <label>
+                    Volumen
+                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <span>0.00</span>
+                </label>
+                <label>
+                    Frecuencia
+                    <input class="freq-fader" type="range" min="60" max="1000" step="0.1" value="200" disabled>
+                    <span>200 Hz</span>
+                </label>
+            </article>
+
+            <article id="filter">
+                <h2>Filter</h2>
+
+                <label>Type
+                    <select name="filter-type" id="filter-type">
+                        <option value="lowpass">LP</option>
+                        <option value="bandpass">BP</option>
+                        <option value="highpass">HP</option>
+                    </select>
+                </label>
+                <label>Cut Off
+                     <input id="filter-cutoff" type="range" value="500" min="30" max="12000" step="10" disabled>
+                     <span>500 Hz</span>
+                </label>
+
+                <label>Resonance
+                    <input id="filter-res" type="range" value="0" min="1" max="30" step="0.01" disabled>
+                    <span>0</span>
+                </label>
+            </article>
+
+        </section>
+
+        <section id="presets">
+            <article>
+                <button id="show-params">Show params</button>
+                <p id="audio-params"></p>
+            </article>
+
+            <article>
+                <button id="load-preset" disabled>Load preset</button>
+                <p>Enter .json file name from presets folder</p>
+                <label>File name:
+                    <input id="file-name" type="text" disabled>
+                </label>
+                <p id="preset"></p>
+            </article>
+        </section>
+
+    </main>   
+
+
+    <script src="js/synth.js"></script>
+</body>
+</html>
