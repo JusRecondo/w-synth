@@ -34,7 +34,7 @@ section#master {
 }
 
 section#presets article {
-    min-height: 110px;
+    min-height: 120px;
 }
 
 article {
@@ -78,14 +78,54 @@ input[type="range"] {
     width: 100%;
 }
 
-input[type="text"] {
-    width: 60%;
-}
-
 p#preset,
 p#audio-params {
-    font-size: 12px;
+    font-size: 80%;
 }
+
+a#download-preset {
+    color: #000;
+    background: #ea407f;
+    display: block;
+    margin-top: 4px;
+}
+
+a#download-preset:hover {
+    color: #efefef;
+}
+
+a#download-preset.hidden {
+    display: none;
+}
+
+article#load-preset label {
+    position: relative;
+    width: 200px;
+    height: 27px;
+    cursor: pointer;
+}
+
+article#load-preset label:hover button:not(:disabled){
+    background: #ea407f;
+}
+
+#load-preset-btn {
+    position: absolute;
+    margin: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+#preset-file {
+    opacity: 0;
+    width: 100%;
+    cursor: pointer;
+}
+
+input#file-upload-button {
+    width: 100%;
+}
+
 
 @media (min-width: 600px) {
     section {
@@ -98,7 +138,7 @@ p#audio-params {
 
     p#preset,
     p#audio-params {
-        font-size: 14px;
+        font-size: 90%;
     }
 
 }

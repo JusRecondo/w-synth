@@ -5,7 +5,7 @@ const oscWaveSelect = document.querySelectorAll(".osc-wave");
 const filterType = document.querySelector("#filter-type");
 const filterC = document.querySelector("#filter-cutoff");
 const filterR = document.querySelector("#filter-res");
-const fileInput = document.querySelector('#file-name');
+const loadPresetFile = document.querySelector('#preset-file');
 
 const synth = {
   audioCtx: null,
@@ -106,32 +106,30 @@ function updateParams() {
   });
 
   //Filter
+  audioParams.filter.type      = filterType.value;
+  audioParams.filter.cutoff    = filterC.value;
+  audioParams.filter.resonance = filterR.value;
+
   synth.filter.type = filterType.value;
   synth.filter.frequency.value = filterC.value;
   filterC.nextElementSibling.innerText = filterC.value + " Hz";
   synth.filter.Q.value = filterR.value;
   filterR.nextElementSibling.innerText = filterR.value;
-
 }
 
-function loadPreset() {
-  let presetFile = fileInput.value;
-  if(presetFile === '') {
-     fileInput.placeholder = 'Please enter file name';
 
-  } else {
+//Load user preset
+function loadPreset(e) {
+  let reader = new FileReader();
 
-    fetch( './js/presets/'+ presetFile +'.json' )
-    .then( (response) => response.json() )
-    .then( (preset) => {
-      document.querySelector('#preset').innerHTML = JSON.stringify(preset);
-      return audioParams = preset;
-    } )
-    .then( () => {
-      setParams();
-      updateParams();
-    });
-  }  
+  reader.addEventListener('load', (e) => {
+    document.querySelector('#preset').innerHTML = e.target.result;
+    let preset = JSON.parse(e.target.result);
+    audioParams = preset;
+    setParams();
+    updateParams();
+  })
+  reader.readAsText(e.target.files[0]);
 }
 
 function setParams() {
@@ -153,13 +151,30 @@ function setParams() {
   filterR.nextElementSibling.innerText = filterR.value;
 }  
 
+
 //Create audio context
 audioCtxOnBtn.addEventListener("click", createAudioCtx);
 //Update params
 document.body.addEventListener("input", updateParams);
-//Show params
-document.querySelector('#show-params').addEventListener( 'click', function() {
+
+//Show params - download user preset
+const savePresetBtn = document.querySelector('#save-preset');
+savePresetBtn.addEventListener( 'click', function() {
   document.querySelector('#audio-params').innerHTML = JSON.stringify(audioParams);
+
+  let userPreset = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(audioParams));
+  let downloadLink = document.querySelector('#download-preset');
+
+  downloadLink.classList.remove('hidden');
+
+  downloadLink.addEventListener('click', ()=> {
+    downloadLink.setAttribute( 'href', userPreset);
+    downloadLink.setAttribute('download', 'userpreset.json');
+  })
+
+  savePresetBtn.innerText = 'Save new preset';
+
 } );
-//Load preset
-document.querySelector('#load-preset').addEventListener( 'click', loadPreset);
+
+//Upload user preset
+loadPresetFile.addEventListener('change', loadPreset);

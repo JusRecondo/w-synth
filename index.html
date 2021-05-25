@@ -94,16 +94,16 @@
 
         <section id="presets">
             <article>
-                <button id="show-params">Show params</button>
+                <button id="save-preset">Save preset</button>
                 <p id="audio-params"></p>
+                <a id="download-preset" href="" class="hidden">Click to download!</a>
             </article>
 
-            <article>
-                <button id="load-preset" disabled>Load preset</button>
-                <p>Enter .json file name from presets folder</p>
-                <label>File name:
-                    <input id="file-name" type="text" disabled>
+            <article id="load-preset">
+                <label><button id="load-preset-btn" disabled>Load preset</button>
+                    <input type="file" id="preset-file" name="preset-file" accept=".json" disabled>
                 </label>
+                <p>Load .json file</p>
                 <p id="preset"></p>
             </article>
         </section>

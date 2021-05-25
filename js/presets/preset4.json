@@ -1,0 +1,6 @@
+{
+  "gains": ["0.30", "0.17", "0.15"],
+  "oscFreqs": ["103.4", "100.8"],
+  "oscWaves": ["sawtooth", "sawtooth"],
+  "filter": { "type": "lowpass", "cutoff": "1400", "resonance": "24.77" }
+}
