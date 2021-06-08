@@ -11,8 +11,8 @@
 <body>
     <main>
         <section id="master">
-        <h1>Web Audio API Synth 2.0</h1>
-            <article>
+            <article id="master-gain">
+                <h1>Web Audio API Synth 2.0</h1>
                 <button id="create-audioctx-btn">
                     0N - OFF
                 </button>
@@ -22,8 +22,76 @@
                     <span>0.00</span>
                 </label>
             </article>
-        </section>    
 
+            <!-- <article id="envelope">
+                <h2>Envelope</h2>
+
+                <label>Attack
+                    <input type="range" id="attack" min="0" max="5" step="0.01" value="0"> 
+                </label> -->
+               <!--  <label>Decay
+                    <input type="range" id="decay" min="0" max="5" step="0.01" value="0">
+                </label>
+                <label>Sustain
+                    <input type="range" id="sustain" min="0" max="0.5" step="0.01" value="0">
+                </label> -->
+               <!--  <label>Release
+                    <input type="range" id="release" min="0" max="5" step="0.1" value="0">
+                </label>
+            </article> -->
+
+            <article id="filter">
+                <h2>Filter</h2>
+
+                <label>Type
+                    <select name="filter-type" id="filter-type">
+                        <option value="lowpass">LP</option>
+                        <option value="bandpass">BP</option>
+                        <option value="highpass">HP</option>
+                    </select>
+                </label>
+                <label>Cut Off
+                     <input id="filter-cutoff" type="range" value="500" min="100" max="12000" step="1" disabled>
+                     <span>500 Hz</span>
+                </label>
+
+                <label>Resonance
+                    <input id="filter-res" type="range" value="0" min="1" max="30" step="0.01" disabled>
+                    <span>0</span>
+                </label>
+            </article>
+            <article id="lfo">
+                <h2>LFO</h2>
+
+                <section>
+                    <label>
+                        <select id="lfo-wave">
+                            <option value="sine">sine</option>
+                            <option value="triangle">triangle</option>
+                            <option value="square">square</option>
+                            <option value="sawtooth">sawtooth</option>
+                        </select>   
+                    </label>
+                    <label>
+                        <input type="checkbox" id="mod-filter" name="lfo-mod" value="filter">Filter
+                    </label>
+                    <label>
+                        <input type="checkbox" id="mod-osc1" name="lfo-mod" value="osc1">OSC I 
+                    </label>
+                    <label>
+                        <input type="checkbox" id="mod-osc2" name="lfo-mod" value="osc2">OSC II
+                    </label> 
+                </section>
+                <label>Rate
+                    <input id="lfo-rate" type="range" value="0" min="0.1" max="30" step="0.01" disabled>
+                    <span>0</span>
+                </label>   
+                <label>Amount
+                    <input id="lfo-amt" type="range" value="0" min="0.5" max="1000" step="0.01" disabled> 
+                    <span>0</span> 
+                </label>                 
+            </article>
+        </section>    
         <section id="oscillators">
             <article id="osc1">
                 <h2>OSC I</h2>
@@ -44,6 +112,10 @@
                     Frecuencia
                     <input class="freq-fader" type="range" min="60" max="1000" step="0.1" value="200" disabled>
                     <span>200 Hz</span>
+                </label>
+                <label>Transpose
+                    <input class="transpose-fader" type="range" min="-12" max="12" step="1" value="0" disabled>
+                    <span>0</span>
                 </label>
             </article>
 
@@ -67,25 +139,34 @@
                     <input class="freq-fader" type="range" min="60" max="1000" step="0.1" value="200" disabled>
                     <span>200 Hz</span>
                 </label>
+                <label>Transpose
+                    <input class="transpose-fader" type="range" min="-12" max="12" step="1" value="0" disabled>
+                    <span>0</span>
+                </label>
             </article>
 
-            <article id="filter">
-                <h2>Filter</h2>
-
-                <label>Type
-                    <select name="filter-type" id="filter-type">
-                        <option value="lowpass">LP</option>
-                        <option value="bandpass">BP</option>
-                        <option value="highpass">HP</option>
-                    </select>
+            <article id="osc3">
+                <h2>OSC III</h2>
+                <label>Wave:
+                    <select class="osc-wave">
+                        <option value="sine">sine</option>
+                        <option value="triangle">triangle</option>
+                        <option value="square">square</option>
+                        <option value="sawtooth">sawtooth</option>
+                    </select>  
                 </label>
-                <label>Cut Off
-                     <input id="filter-cutoff" type="range" value="500" min="30" max="12000" step="10" disabled>
-                     <span>500 Hz</span>
+                <label>
+                    Volumen
+                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <span>0.00</span>
                 </label>
-
-                <label>Resonance
-                    <input id="filter-res" type="range" value="0" min="1" max="30" step="0.01" disabled>
+                <label>
+                    Frecuencia
+                    <input class="freq-fader" type="range" min="60" max="1000" step="0.1" value="200" disabled>
+                    <span>200 Hz</span>
+                </label>
+                <label>Detune
+                    <input class="detune-fader" type="range" value="0" min="-100" max="100" disabled>
                     <span>0</span>
                 </label>
             </article>
@@ -107,6 +188,15 @@
                 <p id="preset"></p>
             </article>
         </section>
+        <section>
+            <article id="midi">
+                <h3>MIDI Config</h3>
+                <p>Recibe notas midi <br>
+                   CC7 Filter Cut Off <br>
+                   CC10 Filter Resonance
+                </p>
+            </article>
+        </section>
 
     </main>   
 
@@ -115,5 +205,6 @@
         <a href="https://github.com/JusRecondo/wsynth2.0" target="_blank">GitHub</a>
     </footer>
     <script src="js/synth.js"></script>
+    <script src="js/keyboard.js"></script>
 </body>
 </html>
