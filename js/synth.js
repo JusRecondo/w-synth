@@ -1,20 +1,22 @@
-const audioCtxOnBtn   = document.querySelector("#create-audioctx-btn");
-const gainFaders      = document.querySelectorAll(".gain-fader");
-const freqFaders      = document.querySelectorAll(".freq-fader");
-const detuneFader     = document.querySelector(".detune-fader");
-const transposeFaders = document.querySelectorAll(".transpose-fader");
-const oscWaveSelect   = document.querySelectorAll(".osc-wave");
-const filterType      = document.querySelector("#filter-type");
-const filterC         = document.querySelector("#filter-cutoff");
-const filterR         = document.querySelector("#filter-res");
-const savePresetBtn   = document.querySelector("#save-preset");
-const loadPresetFile  = document.querySelector("#preset-file");
-//LFO
+const audioCtxOnBtn     = document.querySelector("#create-audioctx-btn");
+//Oscillators
+const gainFaders        = document.querySelectorAll(".gain-fader");
+const freqFaders        = document.querySelectorAll(".freq-fader");
+const detuneFader       = document.querySelector(".detune-fader");
+const transposeFaders   = document.querySelectorAll(".transpose-fader");
+const oscWaveSelect     = document.querySelectorAll(".osc-wave");
+//Filter
+const filterType        = document.querySelector("#filter-type");
+const filterC           = document.querySelector("#filter-cutoff");
+const filterR           = document.querySelector("#filter-res");
+//Presets
+const savePresetBtn     = document.querySelector("#save-preset");
+const uploadPresetFile  = document.querySelector("#preset-file");
+//LFO 
 const lfoMod          = document.querySelectorAll('[name="lfo-mod"]');
 const lfoWave         = document.querySelector('#lfo-wave');
 const lfoRate         = document.querySelector('#lfo-rate');
 const lfoAmt          = document.querySelector('#lfo-amt');
-
 const modOsc1   = document.querySelector('#mod-osc1');
 const modOsc2   = document.querySelector('#mod-osc2');
 const modFilter = document.querySelector('#mod-filter');
@@ -30,6 +32,13 @@ const synth = {
 
 let audioParams = {
   gains: [0, 0, 0, 0],
+  ADSR: {
+    active: false,
+    attack: 0,
+    decay: 0,
+    sustain: 0,
+    release: 0,
+  },
   oscFreqs: [200, 200, 200],
   oscWaves: ["sine", "sine", "sine"],
   filter: {
@@ -47,6 +56,9 @@ let audioParams = {
   oscTranspose: [0, 0]
 };
 
+/* 
+* Create audio context and update audio params
+*/
 function createAudioCtx() {
   if (!synth.audioCtx || synth.audioCtx.state === "closed") {
     //Create AudioContext & oscillators
@@ -85,7 +97,7 @@ function createAudioCtx() {
       }
     }
 
-    //Set params 
+    //update params 
     updateParams();
 
     //Start oscillators
@@ -110,15 +122,17 @@ function createAudioCtx() {
   }
 }
 
-
-function updateParams(e) {
+/* 
+* Update audio params
+*/
+function updateParams() {
   //Master & oscillators gain
   gainFaders.forEach((e, index) => {
     let gain = parseFloat(e.value);
     audioParams.gains[index]       = gain.toFixed(2);
     e.nextElementSibling.innerText = gain.toFixed(2);
     
-    if (synth.audioCtx) {
+    if (synth.audioCtx && audioParams.ADSR.active === false) {
       synth.gainNodes[index].gain.linearRampToValueAtTime(
         gain,
         synth.audioCtx.currentTime + 0.1
@@ -126,6 +140,9 @@ function updateParams(e) {
     } 
   });
 
+  //Envelope
+  updateEG();
+  
   //Oscillators waves
   oscWaveSelect.forEach((e, index) => {
     let wave = e.value;
@@ -158,8 +175,37 @@ function updateParams(e) {
   //Oscillators I & II Transpose 
   transposeFaders.forEach((e, index) => {
     let semitones = parseInt(e.value) * 100;
-    audioParams.oscTranspose[index] = semitones;
-    e.nextElementSibling.innerText  = semitones;
+    audioParams.oscTranspose[index] = parseInt(e.value);
+
+    let intervals = {
+      '-1200': '-8th',
+      '-1100': '-M7th',
+      '-1000': '-m7th',
+      '-900' : '-M6th',
+      '-800' : '-m6th',
+      '-700' : '-5th',
+      '-600' : '-aug4th',
+      '-500' : '-4th',
+      '-400' : '-M3rd',
+      '-300' : '-m3rd',
+      '-200' : '-M2nd',
+      '-100' : '-m2nd',
+      '0'    : 'unison',
+      '1200': '8th',
+      '1100': 'M7th',
+      '1000': 'm7th',
+      '900' : 'M6th',
+      '800' : 'm6th',
+      '700' : '5th',
+      '600' : 'aug4th',
+      '500' : '4th',
+      '400' : 'M3rd',
+      '300' : 'm3rd',
+      '200' : 'M2nd',
+      '100' : 'm2nd'
+    }
+
+    e.nextElementSibling.innerText  = intervals[semitones];
 
     if(synth.audioCtx) {
       synth.oscillators[index].detune.value = semitones;
@@ -259,8 +305,21 @@ modOsc2.addEventListener( 'change', function() {
     }  
 });
 
-//Load user preset
-function loadPreset(e) {
+//Create audio context
+audioCtxOnBtn.addEventListener('click', createAudioCtx);
+//Update params
+document.querySelector('#master-gain').addEventListener('input', updateParams);
+document.querySelector('#filter').addEventListener('input', updateParams);
+document.querySelector('#lfo').addEventListener('input', updateParams);
+document.querySelector('#oscillators').addEventListener('input', updateParams);
+
+
+/* 
+* Presets
+*/
+
+//Upload user preset
+function uploadPreset(e) {
   let reader = new FileReader();
 
   reader.addEventListener('load', (e) => {
@@ -275,11 +334,23 @@ function loadPreset(e) {
   reader.readAsText(e.target.files[0]);
 }
 
-//Setear parametros segun el preset cargado
+//Set params as user preset
 function setParams() {
   gainFaders.forEach((e, i) => {
     e.value = audioParams.gains[i];
   });
+
+  EG.classList = audioParams.ADSR.active === true ? '' : 'disabled'; 
+  activateEG.innerText = EG.classList.contains('disabled') ? 'Activate EG' : 'Deactivate EG';
+  A.value = audioParams.ADSR.attack;
+  A.nextElementSibling.innerText = A.value;
+  D.value = audioParams.ADSR.decay;
+  D.nextElementSibling.innerText = D.value;
+  S.value = audioParams.ADSR.sustain;
+  S.nextElementSibling.innerText = S.value;
+  R.value = audioParams.ADSR.release;
+  R.nextElementSibling.innerText = R.value;
+
 
   freqFaders.forEach((e, i) => {
     e.value = audioParams.oscFreqs[i];
@@ -311,34 +382,27 @@ function setParams() {
 }  
 
 
-//Create audio context
-audioCtxOnBtn.addEventListener('click', createAudioCtx);
-//Update params
-document.querySelector('#master-gain').addEventListener('input', updateParams);
-document.querySelector('#filter').addEventListener('input', updateParams);
-document.querySelector('#lfo').addEventListener('input', updateParams);
-document.querySelector('#oscillators').addEventListener('input', updateParams);
-
-
 
 //Show params - download user preset
 savePresetBtn.addEventListener( 'click', function() {
   document.querySelector('#audio-params').innerHTML = JSON.stringify(audioParams);
 
-  let userPreset = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(audioParams));
+  const userPreset = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(audioParams));
   
-  const downloadLink = document.querySelector("#download-preset");
+  const downloadLink = document.querySelector('#download-preset');
 
   downloadLink.classList.remove('hidden');
 
   downloadLink.addEventListener('click', ()=> {
+    const presetName   = document.querySelector('#preset-name').value; 
     downloadLink.setAttribute( 'href', userPreset);
-    downloadLink.setAttribute('download', 'userpreset.json');
-  })
+    downloadLink.setAttribute('download', presetName + '.json');
+  });
 
   savePresetBtn.innerText = 'Save new preset';
 
 } );
 
 //Upload user preset
-loadPresetFile.addEventListener('change', loadPreset);
+uploadPresetFile.addEventListener('change', uploadPreset);
+

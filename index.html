@@ -17,28 +17,36 @@
                     0N - OFF
                 </button>
                 <label>
-                    Master 
-                    <input id="master-gain-fader" class="gain-fader" type="range" min=0 max=1 step=0.01 value=0 >
+                    Master volume
+                    <input id="master-gain-fader" class="gain-fader" type="range" min="0" max="0.5" step="0.01" value="0" >
                     <span>0.00</span>
                 </label>
+                <button id="activate-eg-btn">
+                    Activate Envelope
+                 </button>
             </article>
 
-            <!-- <article id="envelope">
+            <article id="envelope" class="disabled">
                 <h2>Envelope</h2>
 
+                </label>
                 <label>Attack
-                    <input type="range" id="attack" min="0" max="5" step="0.01" value="0"> 
-                </label> -->
-               <!--  <label>Decay
-                    <input type="range" id="decay" min="0" max="5" step="0.01" value="0">
+                    <input type="range" id="attack" min="0.01" max="4" step="0.01" value="0.01"> 
+                    <span>0</span>
+                </label> 
+                <label>Decay
+                    <input type="range" id="decay" min="0.05" max="4" step="0.01" value="0.05">
+                    <span>0</span>
                 </label>
                 <label>Sustain
-                    <input type="range" id="sustain" min="0" max="0.5" step="0.01" value="0">
-                </label> -->
-               <!--  <label>Release
-                    <input type="range" id="release" min="0" max="5" step="0.1" value="0">
+                    <input type="range" id="sustain" min="0" max="1" step="0.01" value="0">
+                    <span>0</span>
                 </label>
-            </article> -->
+                    <label>Release
+                    <input type="range" id="release" min="0.01" max="3" step="0.1" value="0.01">
+                    <span>0</span>
+                </label>
+            </article>
 
             <article id="filter">
                 <h2>Filter</h2>
@@ -60,10 +68,11 @@
                     <span>0</span>
                 </label>
             </article>
+
             <article id="lfo">
                 <h2>LFO</h2>
 
-                <section>
+                <section id="lfo-config">
                     <label>
                         <select id="lfo-wave">
                             <option value="sine">sine</option>
@@ -83,7 +92,7 @@
                     </label> 
                 </section>
                 <label>Rate
-                    <input id="lfo-rate" type="range" value="0" min="0.1" max="30" step="0.01" disabled>
+                    <input id="lfo-rate" type="range" value="0" min="0.1" max="15" step="0.01" disabled>
                     <span>0</span>
                 </label>   
                 <label>Amount
@@ -91,7 +100,8 @@
                     <span>0</span> 
                 </label>                 
             </article>
-        </section>    
+        </section>  
+
         <section id="oscillators">
             <article id="osc1">
                 <h2>OSC I</h2>
@@ -105,7 +115,7 @@
                 </label>
                 <label>
                     Volumen
-                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <input class="gain-fader" type="range" min="0" max="0.5" step="0.01" value="0" disabled>
                     <span>0.00</span>
                 </label>
                 <label>
@@ -131,7 +141,7 @@
                 </label>
                 <label>
                     Volumen
-                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <input class="gain-fader" type="range" min="0" max="0.5" step="0.01" value="0" disabled>
                     <span>0.00</span>
                 </label>
                 <label>
@@ -157,7 +167,7 @@
                 </label>
                 <label>
                     Volumen
-                    <input class="gain-fader" type="range" min="0" max="1" step="0.01" value="0" disabled>
+                    <input class="gain-fader" type="range" min="0" max="0.5" step="0.01" value="0" disabled>
                     <span>0.00</span>
                 </label>
                 <label>
@@ -176,12 +186,15 @@
         <section id="presets">
             <article>
                 <button id="save-preset">Save preset</button>
+                <label>Name:
+                    <input type="text" name="preset-name" id="preset-name">
+                </label>
                 <p id="audio-params"></p>
                 <a id="download-preset" href="" class="hidden">Click to download!</a>
             </article>
 
             <article id="load-preset">
-                <label><button id="load-preset-btn">Load preset</button>
+                <label><button id="load-preset-btn">Upload preset</button>
                     <input type="file" id="preset-file" name="preset-file" accept=".json">
                 </label>
                 <p>Load .json file</p>
@@ -190,8 +203,8 @@
         </section>
         <section>
             <article id="midi">
-                <h3>MIDI Config</h3>
-                <p>Recibe notas midi <br>
+                <h3>MIDI Config - <span id="midi-info">No device connected</span></h3>
+                <p>MIDI notes<br>
                    CC7 Filter Cut Off <br>
                    CC10 Filter Resonance
                 </p>

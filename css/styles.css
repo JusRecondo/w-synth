@@ -1,7 +1,8 @@
 :root {
-    --background-dark-color: rgba(83, 48, 189, 0.58);;
+    --background-dark-color: rgba(83, 48, 189, 0.58);
     --background-light-color: #d1c0ff;
-    --button-color: #ea407f;
+    --button-hover: rgba(231, 79, 135, 0.959);
+    --button-on: #ea407f;
     --font-dark-color: #000;
     --font-light-color: #efefef;
 }
@@ -33,6 +34,7 @@ main {
 
 section {
     width: 100%;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -40,12 +42,16 @@ section {
 }
 
 section#master article {
-    min-height: 202px;
+    min-height: 250px;
 }
 
 section#presets article {
     min-height: 150px;
     max-width: 100%;
+}
+
+section#lfo-config {
+    flex-direction: row;
 }
 
 article {
@@ -75,11 +81,11 @@ button {
     border: 1px solid var(--font-dark-color);
 }
 button:hover:not(:disabled) {
-    background: var(--button-color);
+    background: var(--button-hover);
 }
 
 button.on {
-    background: var(--button-color);
+    background: var(--button-on);
 }
 
 label {
@@ -108,7 +114,7 @@ p#audio-params {
 
 a#download-preset {
     color: var(--font-dark-color);
-    background: var(--button-color);
+    background: var(--button-on);
     display: block;
     margin-top: 8px;
     font-size: 14px;
@@ -130,7 +136,7 @@ article#load-preset label {
 }
 
 article#load-preset label:hover button:not(:disabled){
-    background: var(--button-color);
+    background: var(--button-hover);
 }
 
 #load-preset-btn {
@@ -146,6 +152,7 @@ article#load-preset label:hover button:not(:disabled){
     cursor: pointer;
 }
 
+
 footer {
     padding: 8px;
     text-align: center;
@@ -154,7 +161,7 @@ footer {
 
 footer a {
     color: var(--font-light-color);
-    font-size: 14px;
+    font-size: 16px;
 }
 
 article#envelope label {
@@ -162,9 +169,22 @@ article#envelope label {
     margin: 5px;
 }
 
-@media (min-width: 600px) {
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (max-width: 1000px) and (min-width: 768px) {
+    #create-audioctx-btn,
+    #enable-eg-btn {
+        width: 130px;
+    }
+}
+
+@media (min-width: 1000px) {
     section {
         flex-direction: row;
+        max-width: none;
     }
 
     p#preset,

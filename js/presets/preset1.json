@@ -1,6 +1,0 @@
-{
-  "gains": ["0.30", "0.10", "0.14"],
-  "oscFreqs": ["400", "398.3"],
-  "oscWaves": ["sawtooth", "sawtooth"],
-  "filter": { "type": "bandpass", "cutoff": 800, "resonance": 0 }
-}
