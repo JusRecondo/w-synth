@@ -192,4 +192,7 @@ article#envelope label {
         font-size: 90%;
     }
 
+    #evelope-info {
+        display: none;
+    }
 }

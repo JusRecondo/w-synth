@@ -142,7 +142,8 @@ const activateEG = document.querySelector('#activate-eg-btn');
 activateEG.addEventListener('click', () => {
     EG.classList.toggle('disabled');
     activateEG.classList.toggle('on');
-    activateEG.innerText = EG.classList.contains('disabled') ? 'Activate Envelope' : 'Deactivate Envelope';
+    activateEG.innerText = EG.classList.contains('disabled') ? 'Activar envolvente' : 'Desactivar envolvente';
+
     audioParams.ADSR.active = !audioParams.ADSR.active;
 
     updateParams();
