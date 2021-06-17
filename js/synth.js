@@ -1,17 +1,17 @@
-const audioCtxOnBtn     = document.querySelector("#create-audioctx-btn");
+const audioCtxOnBtn     = document.querySelector('#create-audioctx-btn');
 //Oscillators
-const gainFaders        = document.querySelectorAll(".gain-fader");
-const freqFaders        = document.querySelectorAll(".freq-fader");
-const detuneFader       = document.querySelector(".detune-fader");
-const transposeFaders   = document.querySelectorAll(".transpose-fader");
-const oscWaveSelect     = document.querySelectorAll(".osc-wave");
+const gainFaders        = document.querySelectorAll('.gain-fader');
+const freqFaders        = document.querySelectorAll('.freq-fader');
+const detuneFader       = document.querySelector('.detune-fader');
+const transposeFaders   = document.querySelectorAll('.transpose-fader');
+const oscWaveSelect     = document.querySelectorAll('.osc-wave');
 //Filter
-const filterType        = document.querySelector("#filter-type");
-const filterC           = document.querySelector("#filter-cutoff");
-const filterR           = document.querySelector("#filter-res");
+const filterType        = document.querySelector('#filter-type');
+const filterC           = document.querySelector('#filter-cutoff');
+const filterR           = document.querySelector('#filter-res');
 //Presets
-const savePresetBtn     = document.querySelector("#save-preset");
-const uploadPresetFile  = document.querySelector("#preset-file");
+const savePresetBtn     = document.querySelector('#save-preset');
+const uploadPresetFile  = document.querySelector('#preset-file');
 //LFO 
 const lfoMod          = document.querySelectorAll('[name="lfo-mod"]');
 const lfoWave         = document.querySelector('#lfo-wave');
@@ -40,15 +40,15 @@ let audioParams = {
     release: 0,
   },
   oscFreqs: [200, 200, 200],
-  oscWaves: ["sine", "sine", "sine"],
+  oscWaves: ['sine', 'sine', 'sine'],
   filter: {
-    type: "lowpass",
+    type: 'lowpass',
     cutoff: 500,
     resonance: 0,
   },
   lfo: {
     mod: [null, null, null],
-    wave: "sine",
+    wave: 'sine',
     rate: 0,
     amount: 0,
   },
@@ -60,7 +60,7 @@ let audioParams = {
 * Create audio context and update audio params
 */
 function createAudioCtx() {
-  if (!synth.audioCtx || synth.audioCtx.state === "closed") {
+  if (!synth.audioCtx || synth.audioCtx.state === 'closed') {
     //Create AudioContext & oscillators
     synth.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -108,17 +108,15 @@ function createAudioCtx() {
     //Start LFO
     synth.lfo.start(synth.audioCtx.currentTime);
 
-    document.querySelectorAll(":disabled").forEach((e) => {
+    document.querySelectorAll(':disabled').forEach((e) => {
       e.disabled = false;
     });
 
-    document.querySelector("button").classList.add("on");
-
-    console.log(synth);
+    audioCtxOnBtn.classList.add('on');
 
   } else {
     synth.audioCtx.close();
-    document.querySelector("button").classList.remove("on");
+    audioCtxOnBtn.classList.remove('on');
   }
 }
 
@@ -157,7 +155,7 @@ function updateParams() {
   freqFaders.forEach((e, index) => {
     let freq = e.value;
     audioParams.oscFreqs[index]    = freq;
-    e.nextElementSibling.innerText = freq + " Hz";
+    e.nextElementSibling.innerText = freq + ' Hz';
 
     if (synth.audioCtx) {
       synth.oscillators[index].frequency.value = freq;
@@ -167,7 +165,7 @@ function updateParams() {
   //OSC III Detune
   let osc3Detune = detuneFader.value;
   audioParams.oscDetune   = osc3Detune;
-  detuneFader.nextElementSibling.innerText = osc3Detune + " cents";
+  detuneFader.nextElementSibling.innerText = osc3Detune + ' cents';
   if(synth.audioCtx) {
     synth.oscillators[2].detune.value = osc3Detune;
   }
@@ -190,7 +188,7 @@ function updateParams() {
       '-300' : '-m3rd',
       '-200' : '-M2nd',
       '-100' : '-m2nd',
-      '0'    : 'unison',
+      '0'    : '0',
       '1200': '8th',
       '1100': 'M7th',
       '1000': 'm7th',
@@ -225,7 +223,7 @@ function updateParams() {
     synth.filter.Q.value = res;
   }
 
-  filterC.nextElementSibling.innerText = cut + " Hz";
+  filterC.nextElementSibling.innerText = cut + ' Hz';
   filterR.nextElementSibling.innerText = res;
 
   //LFO
@@ -323,7 +321,7 @@ function uploadPreset(e) {
   let reader = new FileReader();
 
   reader.addEventListener('load', (e) => {
-    document.querySelector("#preset").innerHTML = e.target.result;
+    document.querySelector('#preset').innerHTML = e.target.result;
 
     let preset  = JSON.parse(e.target.result);
     audioParams = preset;
@@ -340,8 +338,18 @@ function setParams() {
     e.value = audioParams.gains[i];
   });
 
-  EG.classList = audioParams.ADSR.active === true ? '' : 'disabled'; 
-  activateEG.innerText = EG.classList.contains('disabled') ? 'Activate EG' : 'Deactivate EG';
+  EG.classList = audioParams.ADSR.active === true ? '' : 'disabled';
+
+  if ( audioParams.ADSR.active === true ) {
+    EG.classList.remove('disabled');
+    activateEG.classList.add('on');
+    activateEG.innerText = 'Desactivar Envolvente';
+  } else {
+    EG.classList.add('disabled');
+    activateEG.classList.remove('on');
+    activateEG.innerText = 'Activar envolvente';
+  }
+
   A.value = audioParams.ADSR.attack;
   A.nextElementSibling.innerText = A.value;
   D.value = audioParams.ADSR.decay;
@@ -368,7 +376,7 @@ function setParams() {
 
   filterType.value  = audioParams.filter.type;
   filterC.value     = audioParams.filter.cutoff;
-  filterC.nextElementSibling.innerText = filterC.value + " Hz";
+  filterC.nextElementSibling.innerText = filterC.value + ' Hz';
   filterR.value     = audioParams.filter.resonance;
   filterR.nextElementSibling.innerText = filterR.value;
 

@@ -71,7 +71,7 @@ function midiCCMap( cc, min, max ) {
 function midiToFilterC(cut) {
     if (synth.audioCtx && cut) {
         filterC.value = cut;
-        filterC.nextElementSibling.innerText = cut + " Hz";
+        filterC.nextElementSibling.innerText = cut + ' Hz';
         synth.filter.frequency.exponentialRampToValueAtTime(cut, synth.audioCtx.currentTime + 0.2);
         audioParams.filter.cutoff    = cut;
     }
@@ -96,7 +96,7 @@ function playNote(frequency) {
     freqFaders.forEach( (e, i) => {
         e.value = frequency;
         audioParams.oscFreqs[i] = frequency;
-        e.nextElementSibling.innerText = frequency + " Hz";
+        e.nextElementSibling.innerText = frequency + ' Hz';
 
         if(synth.audioCtx) {
             synth.oscillators[i].frequency.value = frequency;
@@ -132,10 +132,10 @@ function noteOff(frequency) {
 * Envelope 
 */
 const EG = document.querySelector('#envelope');
-const A = document.querySelector("#attack");
-const D = document.querySelector("#decay");
-const S = document.querySelector("#sustain");
-const R = document.querySelector("#release");
+const A = document.querySelector('#attack');
+const D = document.querySelector('#decay');
+const S = document.querySelector('#sustain');
+const R = document.querySelector('#release');
 
 const activateEG = document.querySelector('#activate-eg-btn');
 
@@ -148,7 +148,7 @@ activateEG.addEventListener('click', () => {
 
     updateParams();
 
-    if ( !EG.classList.contains('disabled') ) {
+    if ( !EG.classList.contains('disabled') && synth.audioCtx) {
         noteOff();
     }
 });
@@ -156,7 +156,6 @@ activateEG.addEventListener('click', () => {
 EG.addEventListener('input', updateEG);
 
 function updateEG () {
-
     audioParams.ADSR.active = EG.classList.contains('disabled') ? false : true;
 
     let attack = parseFloat(A.value);
