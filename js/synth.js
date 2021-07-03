@@ -267,6 +267,7 @@ function updateParams() {
     synth.lfoGainNode.gain.value         = LFOAmt;
     lfoAmt.nextElementSibling.innerText  = LFOAmt;
   }
+  
 }
 
 //Update LFO mod

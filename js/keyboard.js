@@ -30,7 +30,7 @@ function onMIDIfailure () {
 
 function onMIDIMessage(message) {
     let frequency = midiNoteToFrequency(message.data[1]).toFixed(2);
-
+    
     if(synth.audioCtx) {
         if (message.data[0] === 144 && message.data[2] > 0) {
             playNote(frequency);
@@ -43,16 +43,30 @@ function onMIDIMessage(message) {
     }
 
     //midi to filter
-    let filterCut; //knob 1 cc7
-    let filterRes; //knob 2 cc10
+    //knob 1 cc7
+    //knob 2 cc10
 
-    if(filterCut !== 0 && message.data[1] === 7) {
-        filterCut = midiCCMap( message.data[2], 100, 12000);
-        midiToFilterC(filterCut);
+    if(message.data[1] === 7) {
+        let midiInput = midiCCMap( message.data[2], 100, 12000);
+        midiToFilterC(midiInput);
     } 
+
     if (message.data[1] === 10 ){
-        filterRes = midiCCMap(message.data[2], 0, 30);
-        midiToFilterR(filterRes);
+        let midiInput = midiCCMap(message.data[2], 0, 30);
+        midiToFilterR(midiInput);
+    }
+
+    //midi to LFO
+    //knob 3 cc11
+    //knob 4 cc91
+    if (message.data[1] === 11 ){
+        let midiInput = midiCCMap(message.data[2], 0.1, 15);
+        midiToLFORate(midiInput);
+    }
+
+    if (message.data[1] === 91 ){
+        let midiInput = midiCCMap(message.data[2], 0.5, 1000);
+        midiToLFOAmt(midiInput);
     }
 
 }
@@ -69,7 +83,7 @@ function midiCCMap( cc, min, max ) {
 }
 
 function midiToFilterC(cut) {
-    if (synth.audioCtx && cut) {
+    if (synth.audioCtx) {
         filterC.value = cut;
         filterC.nextElementSibling.innerText = cut + ' Hz';
         synth.filter.frequency.exponentialRampToValueAtTime(cut, synth.audioCtx.currentTime + 0.2);
@@ -78,11 +92,29 @@ function midiToFilterC(cut) {
 }
 
 function midiToFilterR(res) {
-    if (synth.audioCtx && res) {
+    if (synth.audioCtx) {
         filterR.value = res;
         filterR.nextElementSibling.innerText = res;
         synth.filter.Q.value = res;
         audioParams.filter.resonance = res;
+    }
+}
+
+function midiToLFORate(rate) {
+    if (synth.audioCtx) {
+        lfoRate.value = rate;
+        synth.lfo.frequency.value = rate;
+        lfoRate.nextElementSibling.innerText = rate; 
+        audioParams.lfo.rate = rate;
+    }
+}
+
+function midiToLFOAmt(amt) {
+    if (synth.audioCtx) {
+        lfoAmt.value = amt;
+        synth.lfoGainNode.gain.value = amt;
+        lfoAmt.nextElementSibling.innerText = amt; 
+        audioParams.lfo.amount = amt;
     }
 }
 
