@@ -37,7 +37,7 @@ const filterTypes = ["lowpass", "bandpass", "highpass"];
 
 function createRandomParams() {
     return {
-        gains: audioParams.gains.map(_ => getRandomInRange(0.1, 0.5)),
+        gains: audioParams.gains.map(_ => getRandomInRange(0.1, 0.3)),
         ADSR: {
             active: false,
             attack: 0,
