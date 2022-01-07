@@ -123,6 +123,14 @@ function midiToLFOAmt(amt) {
 */
 let playedNotes = [];
 
+function triggerNote() {
+    attackDecaySustain(audioParams.ADSR.attack, audioParams.ADSR.decay, audioParams.ADSR.sustain);    
+}
+ 
+function releaseNote() {
+    release(audioParams.ADSR.release);
+}
+
 function playNote(frequency) {
 
     freqFaders.forEach( (e, i) => {
@@ -140,7 +148,7 @@ function playNote(frequency) {
     }
 
     if (playedNotes.length === 1 && audioParams.ADSR.active === true) { 
-        attackDecaySustain(audioParams.ADSR.attack, audioParams.ADSR.decay, audioParams.ADSR.sustain);
+        triggerNote();
     }
 }
 
@@ -152,7 +160,7 @@ function noteOff(frequency) {
     }  
 
     if (playedNotes.length === 0) {
-        release(audioParams.ADSR.release);
+        releaseNote();
     } else {
         synth.oscillators.forEach((oscillator) => {
             oscillator.frequency.value = playedNotes[playedNotes.length -1];
@@ -231,3 +239,8 @@ function release(releaseTime) {
     })
 }
 
+//Trigger env
+const envTrigger = document.querySelector("#trigger-envelope");
+
+envTrigger.addEventListener("mousedown", triggerNote)
+envTrigger.addEventListener("mouseup", releaseNote)
