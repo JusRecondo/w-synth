@@ -53,7 +53,9 @@ function createRandomParams() {
             resonance: getRandomInRange(1, 20),
         },
         lfo: {
-            mod: [Math.random() < 0.3, Math.random() < 0.1, Math.random() < 0.1],
+            mod: [Math.random() < 0.5 ? "filter" : null, 
+                  Math.random() < 0.5 ? "osc1" : null, 
+                  Math.random() < 0.5 ? "osc2" : null],
             wave: getRandomElement(oscWaveTypes),
             rate: getRandomInRange(0.1, 30),
             amount: getRandomInRange(1, 800),
@@ -294,23 +296,24 @@ function updateParams() {
         if (e.checked) {
             audioParams.lfo.mod[index] = e.value;
         } else {
-            audioParams.lfo.mod[index] = false;
+            audioParams.lfo.mod[index] = null;
         }
     });
 
     //Connect LFO when loading user preset
     if (synth.audioCtx) {
+        synth.lfoGainNode.disconnect() //first we need to reset the lfo destinations from previous 
         if (audioParams.lfo.mod[0]) {
             synth.lfoGainNode.connect(synth.filter.frequency);
         }
 
         if (audioParams.lfo.mod[1]) {
             synth.lfoGainNode.connect(synth.oscillators[0].frequency);
-        }
+        } 
 
         if (audioParams.lfo.mod[2]) {
             synth.lfoGainNode.connect(synth.oscillators[1].frequency);
-        }
+        } 
     }
 
     audioParams.lfo.wave = LFOWave;
@@ -439,9 +442,9 @@ function setParams() {
     lfoRate.value = audioParams.lfo.rate;
     lfoAmt.value = audioParams.lfo.amount;
 
-    modFilter.checked = audioParams.lfo.mod[0];
-    modOsc1.checked = audioParams.lfo.mod[1];
-    modOsc2.checked = audioParams.lfo.mod[2];
+    modFilter.checked = audioParams.lfo.mod[0] !== null;
+    modOsc1.checked = audioParams.lfo.mod[1] !== null;
+    modOsc2.checked = audioParams.lfo.mod[2] !== null;
 }
 
 //Show params - download user preset
