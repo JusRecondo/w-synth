@@ -53,7 +53,7 @@ function createRandomParams() {
             resonance: getRandomInRange(1, 20),
         },
         lfo: {
-            mod: [Math.random() < 0.3, null, null],
+            mod: [Math.random() < 0.3, Math.random() < 0.1, Math.random() < 0.1],
             wave: getRandomElement(oscWaveTypes),
             rate: getRandomInRange(0.1, 30),
             amount: getRandomInRange(1, 800),
@@ -80,7 +80,7 @@ let audioParams = {
         resonance: 0,
     },
     lfo: {
-        mod: [null, null, null],
+        mod: [false, false, false],
         wave: "sine",
         rate: 0,
         amount: 0,
@@ -294,7 +294,7 @@ function updateParams() {
         if (e.checked) {
             audioParams.lfo.mod[index] = e.value;
         } else {
-            audioParams.lfo.mod[index] = null;
+            audioParams.lfo.mod[index] = false;
         }
     });
 
@@ -439,9 +439,9 @@ function setParams() {
     lfoRate.value = audioParams.lfo.rate;
     lfoAmt.value = audioParams.lfo.amount;
 
-    modFilter.checked = audioParams.lfo.mod[0] !== null ? true : false;
-    modOsc1.checked = audioParams.lfo.mod[1] !== null ? true : false;
-    modOsc2.checked = audioParams.lfo.mod[2] !== null ? true : false;
+    modFilter.checked = audioParams.lfo.mod[0];
+    modOsc1.checked = audioParams.lfo.mod[1];
+    modOsc2.checked = audioParams.lfo.mod[2];
 }
 
 //Show params - download user preset
